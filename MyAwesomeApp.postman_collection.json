@@ -1,0 +1,658 @@
+{
+	"info": {
+		"_postman_id": "33d52f80-37b9-4dc4-a0a7-98af3a912400",
+		"name": "MyAwesomeApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "/register",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "9cf363cf-80eb-413e-895e-c53863e45e9d",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "3c61e5ec-d6a1-4de9-afe9-02c2f9aacc0d",
+										"exec": [
+											"tData = JSON.parse(responseBody)\r",
+											"pm.variables.get(\"variable_key\");\r",
+											"t_value = tData.token\r",
+											"//id_value = tData.user._id\r",
+											"pm.environment.set(\"t_value\", t_value);\r",
+											"//pm.environment.set(\"id_value\", id_value);\r",
+											"pm.test(\"Status code is 422, EMAIL_ALREADY_EXISTS\", function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "admin",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "admin@admin.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "12345",
+											"type": "text"
+										},
+										{
+											"key": "_id ",
+											"value": "5aa1c2c35ef7a4e97b5e995a",
+											"type": "text",
+											"disabled": true
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/register",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2acd2299-de7c-488b-83f7-e38ccf956bc7",
+										"exec": [
+											"verif_Data=JSON.parse(responseBody)\r",
+											"pm.variables.get(\"variable_key\");\r",
+											"verif_id=verif_Data.verification\r",
+											"console.log(verif_id)\r",
+											"pm.environment.set(\"verif_id\", verif_id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{t_value}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{baseURL}}/profile",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/verify",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{t_value}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{baseURL}}/verify?id={{verif_id}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"verify"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{verif_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ede0b843-c319-4ec0-90a7-c9fb334db704",
+										"exec": [
+											"tData = JSON.parse(responseBody)\r",
+											"pm.variables.get(\"variable_key\");\r",
+											"t_value = tData.token\r",
+											"id_value = tData.user._id\r",
+											"pm.environment.set(\"t_value\", t_value);\r",
+											"pm.environment.set(\"id_value\", id_value);\r",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"Successful POST request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{t_value}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "admin",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "admin@admin.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "12345",
+											"type": "text"
+										},
+										{
+											"key": "id",
+											"value": "{{id_value}}",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST forgot valid user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{t_value}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "email",
+											"value": "admin@admin.com",
+											"type": "text"
+										},
+										{
+											"key": "verified",
+											"value": "true",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/forgot",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"forgot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET url",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api-demo.daniel-avellaneda.com/",
+									"protocol": "https",
+									"host": [
+										"api-demo",
+										"daniel-avellaneda",
+										"com"
+									],
+									"path": [
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/token",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{t_value}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/token",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "{{baseURL}}/lregister",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "bc052ed2-d5d9-455e-ab66-ee45aaa2ee0d",
+										"exec": [
+											"tData = JSON.parse(responseBody)\r",
+											"pm.variables.get(\"variable_key\");\r",
+											"t_value = tData.token\r",
+											"id_value = tData.user._id\r",
+											"pm.environment.set(\"t_value\", t_value);\r",
+											"pm.environment.set(\"id_value\", id_value);\r",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"Successful POST request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "fa83c3fc-0b5b-4cda-b560-2d5ebc20513b",
+										"exec": [
+											"var randomEmail = 'abcdefghijklmnopqrstuvwxyz';\r",
+											"return randomEmail[Math.floor(Math.random() * 26)] + Math.random().toString(36).substring(2, 11) + '@domain.com';\r",
+											"pm.setEnvironmentVariable(\"email\", randomEmail);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "user",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "user@user.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "12345",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/lregister",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"lregister"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "city",
+					"item": [
+						{
+							"name": "/cities",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{t_value}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "page",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "id",
+											"value": "{{id_value}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/cities?",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"cities"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/cities/all",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{t_value}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "page",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "id",
+											"value": "{{id_value}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/cities/all",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"cities",
+										"all"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "profile",
+					"item": [
+						{
+							"name": "/profile/changePassword",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{t_value}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "oldPassword",
+											"value": "12345",
+											"type": "text"
+										},
+										{
+											"key": "newPassword",
+											"value": "123456789",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/profile/changePassword",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"profile",
+										"changePassword"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "{{baseURL}}/users",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{t_value}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{baseURL}}/users",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "a7494b47-beb1-47f4-88ef-55891fe18692",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "4c91ce30-a584-4269-af70-d44d872fb67e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "42f8d126-6cfb-495a-b2ed-9610f42758fb",
+			"key": "baseURL",
+			"value": "https://api-demo.daniel-avellaneda.com",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
